@@ -35,6 +35,38 @@ const RaceTrack = () => {
     }
   }, [raceStatus]);
 
+  // Keep screen awake while watching the race (Wake Lock API)
+  useEffect(() => {
+    let wakeLock = null;
+    
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.warn(`Wake Lock error: ${err.name}, ${err.message}`);
+      }
+    };
+
+    requestWakeLock();
+
+    const handleVisibilityChange = () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (wakeLock !== null) {
+        wakeLock.release().catch(() => {}).finally(() => { wakeLock = null; });
+      }
+    };
+  }, []);
+
   const TRACK_LENGTH_VW = 300; // Decreased from 400vw to 300vw to slow down visual speed by 25%
   const progressToVw = (p) => (p / 1000) * TRACK_LENGTH_VW;
 
