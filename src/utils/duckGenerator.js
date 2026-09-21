@@ -1,5 +1,5 @@
 export const DUCK_TYPES = [
-  { id: 1, name: 'Vịt Sịp Hồng', color: '#FFD700', hat: 'none', accessory: 'pink_undies' },
+  { id: 1, name: 'Vịt Sịp Hồng', color: '#FF69B4', hat: 'none', accessory: 'pink_undies' },
   { id: 2, name: 'Vịt Bóng Đêm', color: '#333333', hat: 'ninja', accessory: 'sword' },
   { id: 3, name: 'Vịt Hoàng Gia', color: '#FFD700', hat: 'crown', accessory: 'cape' },
   { id: 4, name: 'Vịt Tuần Lộc', color: '#8B4513', hat: 'antlers', accessory: 'red_nose' },
@@ -11,7 +11,7 @@ export const DUCK_TYPES = [
   { id: 10, name: 'Vịt Nông Dân', color: '#FFD700', hat: 'straw_hat', accessory: 'none' },
   { id: 11, name: 'Vịt Bác Học', color: '#FFFFFF', hat: 'glasses', accessory: 'book' },
   { id: 12, name: 'Vịt Cướp Biển', color: '#FFD700', hat: 'pirate', accessory: 'eyepatch' },
-  { id: 13, name: 'Vịt Hồng Kông', color: '#FF69B4', hat: 'none', accessory: 'necklace' },
+  { id: 13, name: 'Vịt Hồng Kông', color: '#FF1493', hat: 'none', accessory: 'necklace' },
   { id: 14, name: 'Vịt Đỏ Tươi', color: '#FF0000', hat: 'none', accessory: 'none' },
   { id: 15, name: 'Vịt Lục Bảo', color: '#00FA9A', hat: 'halo', accessory: 'none' },
   { id: 16, name: 'Vịt Lam Giang', color: '#1E90FF', hat: 'cap_backwards', accessory: 'none' },

@@ -35,7 +35,7 @@ const RaceTrack = () => {
     }
   }, [raceStatus]);
 
-  const TRACK_LENGTH_VW = 400; // Increased to 400vw so they cover more distance in the same time (faster)
+  const TRACK_LENGTH_VW = 300; // Decreased from 400vw to 300vw to slow down visual speed by 25%
   const progressToVw = (p) => (p / 1000) * TRACK_LENGTH_VW;
 
   const maxProgress = ducks.length > 0 ? Math.max(...ducks.map(d => d.progress)) : 0;
@@ -148,8 +148,8 @@ const RaceTrack = () => {
         
         {/* Winner Celebration Overlay */}
         {raceStatus === 'finished' && winner && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in">
-            <div className="bg-gradient-to-b from-yellow-400 to-yellow-600 p-1 rounded-2xl shadow-[0_0_50px_yellow] animate-bounce">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 animate-fade-in">
+            <div className="bg-gradient-to-b from-yellow-400 to-yellow-600 p-1 rounded-2xl shadow-[0_0_50px_yellow] scale-110">
               <div className="bg-slate-900 rounded-xl p-8 flex flex-col items-center max-w-md text-center">
                 <h2 className="text-4xl font-black text-yellow-400 mb-2 uppercase">NHÀ VÔ ĐỊCH!</h2>
                 <div className="scale-150 my-6 origin-center">

@@ -5,7 +5,7 @@ import { getInitialRaceState } from '../utils/duckGenerator';
 const AdminPanel = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [password, setPassword] = useState('');
-  const [playerNames, setPlayerNames] = useState('');
+  const [playerNames, setPlayerNames] = useState(() => localStorage.getItem('duckRacingPlayers') || '');
   const [duration, setDuration] = useState(30);
   const [raceStatus, setRaceStatus] = useState('idle');
   const [ducks, setDucks] = useState([]);
@@ -26,6 +26,10 @@ const AdminPanel = () => {
     });
     return () => unsubscribe();
   }, [isAdmin]);
+
+  useEffect(() => {
+    localStorage.setItem('duckRacingPlayers', playerNames);
+  }, [playerNames]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -52,11 +56,14 @@ const AdminPanel = () => {
   };
 
   const handleMatchmaking = () => {
-    const names = playerNames.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    let names = playerNames.split('\n').map(n => n.trim()).filter(n => n.length > 0);
     if (names.length === 0) {
       alert('Vui lòng nhập ít nhất 1 người chơi.');
       return;
     }
+    
+    // Shuffle the player names
+    names.sort(() => Math.random() - 0.5);
     
     let initialDucks = getInitialRaceState();
     initialDucks.sort(() => Math.random() - 0.5);
