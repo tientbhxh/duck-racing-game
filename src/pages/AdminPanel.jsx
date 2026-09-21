@@ -99,15 +99,16 @@ const AdminPanel = () => {
            // If a winner is found, ONLY move the winner forward quickly. Stop everyone else.
            const newDucks = currentDucks.map(duck => {
              if (duck.id === winner.id) {
-                return { ...duck, progress: Math.min(1200, duck.progress + 20) };
+                // Swim forward just enough to cross the finish line gracefully (to 1050)
+                return { ...duck, progress: Math.min(1050, duck.progress + 10) };
              }
              return duck;
            });
            
            update(dbRef('raceState'), { ducks: newDucks });
 
-           // Once the winner finishes their solo lap (reaches 1200), end the race
-           if (winner.progress >= 1200) {
+           // Once the winner finishes their solo lap (reaches 1050), end the race
+           if (winner.progress >= 1050) {
              clearInterval(raceLoopRef.current);
              update(dbRef('raceState'), { status: 'finished', winner: winner });
            }
@@ -118,10 +119,9 @@ const AdminPanel = () => {
         // Normal racing logic if no one has finished yet
         const baseStep = 1000 / (duration * 2.5);
         const newDucks = currentDucks.map(duck => {
-          const isBurst = Math.random() > 0.85; 
-          // Increase burst to 1.5x - 5.5x for more separation
-          // Normal speed varies from 0.2x to 1.7x
-          const step = baseStep * (isBurst ? (Math.random() * 4 + 1.5) : Math.random() * 1.5 + 0.2);
+          const isBurst = Math.random() > 0.90; 
+          // Smoother burst (1.5x - 2.5x) to avoid lag, normal (0.7x - 1.3x)
+          const step = baseStep * (isBurst ? (Math.random() * 1.0 + 1.5) : Math.random() * 0.6 + 0.7);
 
           return {
             ...duck,
