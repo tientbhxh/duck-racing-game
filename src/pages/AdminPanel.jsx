@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { db, dbRef, get, set, update, onValue, remove } from '../firebase';
+import { db, dbRef, set, update, onValue, remove } from '../firebase';
 import { getInitialRaceState } from '../utils/duckGenerator';
 import useWorkerInterval from '../hooks/useWorkerInterval';
 
