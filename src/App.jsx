@@ -21,7 +21,7 @@ const Navbar = () => (
 
 function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <div className="min-h-screen bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 flex flex-col">
         <Navbar />
         <main className="flex-1 w-full max-w-7xl mx-auto p-2 md:p-4">
