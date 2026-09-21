@@ -56,10 +56,8 @@ const AdminPanel = () => {
     }
     
     let initialDucks = getInitialRaceState();
-    // Shuffle ducks to randomize pairing
     initialDucks.sort(() => Math.random() - 0.5);
     
-    // Assign names up to the available slots
     const configuredDucks = initialDucks.slice(0, Math.min(names.length, 30)).map((duck, idx) => ({
       ...duck,
       playerName: names[idx]
@@ -70,10 +68,11 @@ const AdminPanel = () => {
       ducks: configuredDucks 
     });
     
-    // Auto transition to ready after 15 seconds of matching animation
-    setTimeout(() => {
-      update(dbRef('raceState'), { status: 'ready' });
-    }, 15000);
+    // Removed setTimeout: Admin must manually click "Vào vị trí"
+  };
+
+  const handleReady = () => {
+    update(dbRef('raceState'), { status: 'ready' });
   };
 
   const handleStartRace = () => {
@@ -84,29 +83,26 @@ const AdminPanel = () => {
 
     update(dbRef('raceState'), { status: 'running' });
     
-    // Start Game Loop on Admin side
     if (raceLoopRef.current) clearInterval(raceLoopRef.current);
     
     raceLoopRef.current = setInterval(() => {
       setDucks((currentDucks) => {
         let allFinished = true;
         const newDucks = currentDucks.map(duck => {
-          if (duck.progress >= 1000) return duck; // Target distance is 1000
+          if (duck.progress >= 200) return duck; // Target distance is 200 (Snail pace)
           allFinished = false;
           
-          // Random burst logic (duration average for 1000 distance)
-          // Progress per tick (400ms) = 1000 / (duration * 2.5 ticks/sec)
-          const baseStep = 1000 / (duration * 2.5);
+          // Progress per tick (400ms) = 200 / (duration * 2.5 ticks/sec)
+          const baseStep = 200 / (duration * 2.5);
           const isBurst = Math.random() > 0.85; 
           const step = baseStep * (isBurst ? (Math.random() * 3 + 1) : Math.random() + 0.5);
 
           return {
             ...duck,
-            progress: Math.min(1000, duck.progress + step)
+            progress: Math.min(200, duck.progress + step)
           };
         });
 
-        // Push to firebase
         update(dbRef('raceState'), { ducks: newDucks });
 
         if (allFinished) {
@@ -190,6 +186,11 @@ const AdminPanel = () => {
       <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold mb-4">Điều khiển (Trạng thái: {raceStatus})</h2>
         <div className="flex space-x-4">
+          {raceStatus === 'matching' && (
+            <button onClick={handleReady} className="bg-yellow-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-yellow-600 transition-colors">
+              Vào vị trí (Sẵn sàng)
+            </button>
+          )}
           <button onClick={handleStartRace} disabled={raceStatus !== 'ready'} className="disabled:opacity-50 bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
             Bắt đầu đua ngay
           </button>
