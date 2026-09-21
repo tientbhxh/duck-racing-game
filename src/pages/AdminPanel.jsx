@@ -168,57 +168,39 @@ const AdminPanel = () => {
         // Normal racing logic if no one has finished yet
         const baseStep = 1000 / (duration * 2.5);
         const newDucks = currentDucks.map(duck => {
-          // Increase variance for natural separation (0.4x to 1.2x)
-          let multiplier = Math.random() * 0.8 + 0.4;
-          
-          let burstTicks = duck.burstTicks || 0;
-          let stumbleTicks = duck.stumbleTicks || 0;
-
-          // 1. Roll for new states if not currently in a special state
-          if (burstTicks === 0 && Math.random() > 0.90) { // 10% chance for random bursts
-             burstTicks = Math.floor(Math.random() * 2) + 2; // 2-3 ticks of normal burst
-          }
+          // Increase variance for natural separation (0.3x to 1.3x)
+          let isBurst = Math.random() > 0.95; 
+          let multiplier = isBurst ? (Math.random() * 2.5 + 3.0) : (Math.random() * 1.0 + 0.3);
 
           // Drama mechanic 1: Continuous chaotic lead changes throughout the race
-          if (maxProgress > 100 && maxProgress < 850 && burstTicks === 0 && stumbleTicks === 0) {
-            if (duck.id === leaderId && Math.random() > 0.90) { 
-              // Leader stumbles rarely (10% chance) for 1-2 ticks (prevents mass slow-down)
-              stumbleTicks = Math.floor(Math.random() * 2) + 1;
-            } else if (duck.id !== leaderId && duck.progress < maxProgress - 30 && Math.random() > 0.80) { 
-              // Trailing ducks (even slightly behind) get adrenaline rushes easily
-              burstTicks = Math.floor(Math.random() * 3) + 2;
+          if (maxProgress > 100 && maxProgress < 970) {
+            if (duck.id === leaderId && Math.random() > 0.70) { 
+              // 30% chance every tick for the leader to stumble dramatically (stops swimming)
+              multiplier = Math.random() * 0.1; 
+            } else if (duck.progress < maxProgress - 80 && Math.random() > 0.75) { 
+              // 25% chance for ducks far behind to get a massive rocket boost!
+              multiplier = Math.random() * 4.0 + 4.0; // 4x - 8x burst!
             }
           }
 
-          // Drama mechanic 2: The Final Scramble
+          // Drama mechanic 2: The Final Scramble (Rubber-banding near the finish line)
           if (maxProgress > 850 && maxProgress < 970) {
-            if (duck.id === leaderId && stumbleTicks === 0 && burstTicks === 0) {
-               // Leader gets nervous and stumbles (100% guaranteed, but only if not currently bursting)
-               stumbleTicks = 2;
-            } else if (duck.progress > maxProgress - 200 && burstTicks === 0 && stumbleTicks === 0) {
-              // Trailing ducks get a massive adrenaline rush
-              if (Math.random() > 0.50) { // 50% chance (very high) to prevent clumping
-                burstTicks = 4; // Long sprint to the finish
+            if (duck.id === leaderId) {
+              // The leader gets nervous and is forced to slow down (guaranteed!)
+              multiplier = Math.random() * 0.4 + 0.2; // 0.2x - 0.6x
+            } else if (duck.progress > maxProgress - 200) {
+              // The trailing ducks get a huge adrenaline rush!
+              if (Math.random() > 0.50) {
+                multiplier = Math.random() * 3.0 + 4.0; // Massive 4.0x - 7.0x burst!
               }
             }
-          }
-
-          // 2. Apply active states
-          if (stumbleTicks > 0) {
-             multiplier = 0.5; // Slow but NOT a freeze (0.5x)
-             stumbleTicks--;
-          } else if (burstTicks > 0) {
-             multiplier = 3.5; // Extremely fast (3.5x) to blast out of the pack
-             burstTicks--;
           }
 
           const step = baseStep * multiplier;
 
           return {
             ...duck,
-            progress: duck.progress + step,
-            burstTicks,
-            stumbleTicks
+            progress: duck.progress + step
           };
         });
 
