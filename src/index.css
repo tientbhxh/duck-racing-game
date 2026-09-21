@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* Custom Duck Animation styles */
+.duck-sprite {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.sky-pattern {
+  background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+}
+
+.grass-pattern {
+  background-color: #32CD32;
+  background-image: linear-gradient(to bottom, #32CD32 0%, #228B22 100%);
+  border-bottom: 8px solid #8B4513;
+  background-repeat: repeat-x;
+}
+
+.river-pattern {
+  background-color: #4facfe;
+  background-image: linear-gradient(to bottom, #3b8d99 0%, #2980b9 50%, #4facfe 100%);
+  position: relative;
+  background-repeat: repeat-x;
+}
+
+.river-waves::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 10%);
+  background-size: 40px 20px;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+.duck-smooth {
+  transition: transform 0.1s linear, top 0.1s linear;
+}
+
+/* Custom Duck Animation styles */
+.duck-sprite {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.river-pattern {
+  background-color: #4facfe;
+  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+}

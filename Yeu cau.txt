@@ -1,0 +1,14 @@
+# Giới thiệu dự án:
+## Xây dựng mini game "Đua vịt" để chọn người may mắn trúng thưởng, phù hợp với 1 cộng đồng game thủ có thể tham gia trực tuyến, tương tác với nhau
+## Tên hiển thị: ☭ Đường đua vịt Búa Liềm
+# Công nghệ và nền tảng sử dụng:
+## Ứng dụng web, source code tự động cập nhật tại GitHub, tự động cập nhật trên tên miền miễn phí tại GitHub Pages
+## Giao diện: không có yêu cầu đặc biệt, có thể sử dụng giao diện 2D, vui nhộn phù hợp mini game cho tập thể
+# Yêu cầu về chức năng của game đua vịt:
+## Hệ thống được hoạt động dưới dạng livestream:
+### Người dùng admin phải đăng nhập để cấu hình các tham số đua vịt, cài đặt thời gian bắt đầu đua, thời lượng đua, danh sách tên thành viên gắn với mỗi chú vịt trên đường đua
+### Người dùng khác (khách) chỉ cần đặt tên để tham gia trò chuyện trên khung chat trong suốt thời gian live đua vịt
+## Các chức năng chính: cấu hình tham số dành cho admin, khung chat dành cho người tham gia xem live
+# Thể lệ đua vịt:
+## Chọn ra chú vịt (gắn tên người chơi đã được admin cấu hình) về đích ở các vị trí đầu tiên để nhận thưởng. Admin sẽ cấu hình cơ cấu giải thưởng (số vịt được giải, giá trị giải)
+## Tốc độ, thứ tự về đích của vịt hoàn toàn được sinh ngẫu nhiên, tự động từ hệ thống. Tuy nhiên trong thời gian diễn ra cuộc đua, thay đổi tốc độ của các chú vịt, một số thay đổi đột biến (nhanh hoặc chậm đột biến) để tạo bất ngờ, thú vị, vui nhộn cho người xem
