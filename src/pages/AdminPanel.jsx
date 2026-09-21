@@ -100,8 +100,12 @@ const AdminPanel = () => {
         let winnerFound = false;
         
         // Check if any duck has reached or crossed the finish line
-        const winner = currentDucks.find(d => d.progress >= 1000);
-        if (winner) {
+        const finishedDucks = currentDucks.filter(d => d.progress >= 1000);
+        if (finishedDucks.length > 0) {
+           // Sort by highest progress to ensure the furthest duck is crowned if multiple finish in the same tick
+           finishedDucks.sort((a, b) => b.progress - a.progress);
+           const winner = finishedDucks[0];
+           
            winnerFound = true;
            // If a winner is found, ONLY move the winner forward quickly. Stop everyone else.
            const newDucks = currentDucks.map(duck => {
