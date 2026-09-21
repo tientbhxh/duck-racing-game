@@ -123,12 +123,32 @@ const AdminPanel = () => {
            return newDucks;
         }
 
+        // Find max progress to identify the leader
+        const maxProgress = Math.max(...currentDucks.map(d => d.progress));
+        const leaderId = currentDucks.find(d => d.progress === maxProgress)?.id;
+
         // Normal racing logic if no one has finished yet
         const baseStep = 1000 / (duration * 2.5);
         const newDucks = currentDucks.map(duck => {
-          const isBurst = Math.random() > 0.90; 
-          // Smoother burst (1.5x - 2.5x) to avoid lag, normal (0.7x - 1.3x)
-          const step = baseStep * (isBurst ? (Math.random() * 1.0 + 1.5) : Math.random() * 0.6 + 0.7);
+          let isBurst = Math.random() > 0.90; 
+          let multiplier = isBurst ? (Math.random() * 1.0 + 1.5) : (Math.random() * 0.6 + 0.7);
+
+          // Drama mechanic: Intense scramble near the finish line (Rubber-banding)
+          if (maxProgress > 850) {
+            if (duck.id === leaderId) {
+              // The leader gets nervous and slows down significantly!
+              isBurst = false;
+              multiplier = Math.random() * 0.4 + 0.3; // 0.3x - 0.7x
+            } else if (duck.progress > 700) {
+              // The trailing ducks get a huge adrenaline rush!
+              isBurst = Math.random() > 0.60; // 40% chance to burst
+              if (isBurst) {
+                multiplier = Math.random() * 2.0 + 2.5; // Massive 2.5x - 4.5x burst!
+              }
+            }
+          }
+
+          const step = baseStep * multiplier;
 
           return {
             ...duck,

@@ -155,24 +155,24 @@ const RaceTrack = () => {
         
         {/* Winner Celebration Overlay */}
         {raceStatus === 'finished' && winner && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
-            <div className="bg-gradient-to-br from-yellow-300 via-yellow-500 to-orange-600 p-[2px] rounded-3xl shadow-[0_0_80px_rgba(250,204,21,0.5)] scale-110">
-              <div className="bg-slate-900/95 backdrop-blur-xl rounded-3xl p-10 flex flex-col items-center max-w-md text-center relative overflow-hidden">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in p-4">
+            <div className="bg-gradient-to-br from-yellow-300 via-yellow-500 to-orange-600 p-[2px] rounded-3xl shadow-[0_0_80px_rgba(250,204,21,0.5)] w-full max-w-md">
+              <div className="bg-slate-900/95 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col items-center text-center relative overflow-hidden w-full">
                 <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-yellow-500/20 to-transparent"></div>
-                <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-500 mb-2 uppercase drop-shadow-md z-10">NHÀ VÔ ĐỊCH!</h2>
+                <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-500 mb-2 uppercase drop-shadow-md z-10">NHÀ VÔ ĐỊCH!</h2>
                 
-                <div className="scale-150 my-8 origin-center z-10 drop-shadow-2xl">
+                <div className="scale-125 my-6 origin-center z-10 drop-shadow-2xl">
                   <DuckSVG color={winner.color} hat={winner.hat} accessory={winner.accessory} number={winner.id} />
                 </div>
                 
-                <div className="text-4xl font-black text-white mb-2 z-10 tracking-tight">{winner.playerName}</div>
-                <div className="text-yellow-400 text-xl font-medium mb-6 z-10 bg-yellow-500/10 px-4 py-1 rounded-full border border-yellow-500/30">{winner.name}</div>
+                <div className="text-2xl md:text-3xl font-black text-white mb-2 z-10 tracking-tight">{winner.playerName}</div>
+                <div className="text-yellow-400 text-lg font-medium mb-4 z-10 bg-yellow-500/10 px-4 py-1 rounded-full border border-yellow-500/30">{winner.name}</div>
                 
                 {prizeContent && (
-                  <div className="mt-2 p-5 bg-gradient-to-r from-yellow-900/50 via-orange-900/50 to-yellow-900/50 border border-yellow-500/40 rounded-2xl w-full z-10 relative overflow-hidden group">
+                  <div className="mt-2 p-4 bg-gradient-to-r from-yellow-900/50 via-orange-900/50 to-yellow-900/50 border border-yellow-500/40 rounded-2xl w-full z-10 relative overflow-hidden group">
                     <div className="absolute inset-0 bg-yellow-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                    <div className="text-yellow-400 font-bold uppercase text-xs mb-2 tracking-widest">Phần Thưởng</div>
-                    <div className="text-white font-black text-2xl drop-shadow-md">{prizeContent}</div>
+                    <div className="text-yellow-400 font-bold uppercase text-xs mb-1 tracking-widest">Phần Thưởng</div>
+                    <div className="text-white font-black text-xl md:text-2xl drop-shadow-md">{prizeContent}</div>
                   </div>
                 )}
               </div>
