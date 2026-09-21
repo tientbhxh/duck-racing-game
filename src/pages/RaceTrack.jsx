@@ -31,9 +31,11 @@ const RaceTrack = () => {
   }, [raceStatus]);
 
   const maxProgress = ducks.length > 0 ? Math.max(...ducks.map(d => d.progress)) : 0;
+  // Camera tries to keep the leader at 60vw. 
   let cameraX = Math.max(0, maxProgress - 60); 
-  cameraX = Math.min(cameraX, 70); // Cap camera so finish line (70) stops at 70% right edge
-  const bgScrollX = -cameraX; // Reduced parallax speed
+  // Max camera is 200, so that the finish line (at 300) appears at 100vw (the right edge)
+  cameraX = Math.min(cameraX, 200); 
+  const bgScrollX = -cameraX; // Background scrolls 1:1 with camera
 
   return (
     // YouTube-like responsive layout: 
@@ -87,8 +89,8 @@ const RaceTrack = () => {
               {/* Start Line */}
               <div className="absolute top-0 bottom-0 w-2 bg-white/40 border-l-4 border-dashed border-white transition-transform" style={{ transform: `translateX(${10 - cameraX}vw)`, left: 0 }}></div>
               
-              {/* Finish Line (at 70 progress) */}
-              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black transition-transform" style={{ transform: `translateX(${70 - cameraX}vw)`, left: 0 }}>
+              {/* Finish Line (at 300 progress) */}
+              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black transition-transform" style={{ transform: `translateX(${300 - cameraX}vw)`, left: 0 }}>
                 {Array.from({ length: 20 }).map((_, i) => (
                   <div key={i} className="flex-1 w-full flex">
                     <div className={`flex-1 ${i % 2 === 0 ? 'bg-white' : 'bg-black'}`}></div>
