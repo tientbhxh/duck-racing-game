@@ -65,7 +65,7 @@ const RaceTrack = () => {
         
         {/* Matchmaking Overlay */}
         {raceStatus === 'matching' && (
-          <div className="absolute inset-0 top-[50px] md:top-[60px] bg-slate-900/90 backdrop-blur-sm z-50 flex flex-col items-center justify-start pt-4 overflow-y-auto custom-scrollbar pb-4">
+          <div className="absolute inset-0 top-[50px] md:top-[60px] bg-slate-900/90 backdrop-blur-sm z-[100] flex flex-col items-center justify-start pt-4 overflow-y-auto custom-scrollbar pb-4">
             <h2 className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-500 mb-4 animate-pulse tracking-wide drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
               ĐANG BỐC THĂM TỪNG NGƯỜI CHƠI...
             </h2>
@@ -139,7 +139,7 @@ const RaceTrack = () => {
                     <div className="relative group animate-paddle" style={{ animationDelay: `${duck.id * -0.15}s` }}>
                       {/* Persistent Name Tag */}
                       {duck.playerName && (
-                        <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-slate-900/80 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap z-50 shadow-lg">
+                        <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-slate-900/80 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap z-10 shadow-lg">
                           {duck.playerName}
                         </div>
                       )}
@@ -155,7 +155,7 @@ const RaceTrack = () => {
         
         {/* Winner Celebration Overlay */}
         {raceStatus === 'finished' && winner && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in p-4">
+          <div className="absolute inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in p-4">
             <div className="bg-gradient-to-br from-yellow-300 via-yellow-500 to-orange-600 p-[2px] rounded-3xl shadow-[0_0_80px_rgba(250,204,21,0.5)] w-full max-w-md">
               <div className="bg-slate-900/95 backdrop-blur-xl rounded-3xl p-6 md:p-8 flex flex-col items-center text-center relative overflow-hidden w-full">
                 <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-yellow-500/20 to-transparent"></div>
