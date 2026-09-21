@@ -73,10 +73,14 @@ const AdminPanel = () => {
         const [playerName, preferredDuckName] = line.split(':').map(s => s.trim());
         const duckIndex = remainingDucks.findIndex(d => d.name.toLowerCase() === preferredDuckName.toLowerCase());
         if (duckIndex !== -1) {
+          // Found an exact match for the duck name in our predefined list
           const duck = remainingDucks.splice(duckIndex, 1)[0];
           configuredDucks.push({ ...duck, playerName });
         } else {
-          remainingPlayers.push(playerName); // Fallback to random if duck not found
+          // Custom name provided! Pick a random duck and overwrite its name.
+          const randomIndex = Math.floor(Math.random() * remainingDucks.length);
+          const duck = remainingDucks.splice(randomIndex, 1)[0];
+          configuredDucks.push({ ...duck, name: preferredDuckName, playerName });
         }
       } else {
         remainingPlayers.push(line);
