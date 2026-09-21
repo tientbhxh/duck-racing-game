@@ -30,7 +30,7 @@ const RaceTrack = () => {
     }
   }, [raceStatus]);
 
-  const TRACK_LENGTH_VW = 150; // Total physical length of the track in vw
+  const TRACK_LENGTH_VW = 300; // Total physical length of the track in vw
   const progressToVw = (p) => (p / 1000) * TRACK_LENGTH_VW;
 
   const maxProgress = ducks.length > 0 ? Math.max(...ducks.map(d => d.progress)) : 0;
@@ -38,8 +38,8 @@ const RaceTrack = () => {
 
   // Camera keeps the leader at exactly 30vw (center-left) to track perfectly. 
   let cameraX = Math.max(0, maxVw - 30); 
-  // Cap camera so finish line (TRACK_LENGTH_VW) reaches 100vw edge max (assuming container is ~75vw, subtract 60)
-  cameraX = Math.min(cameraX, TRACK_LENGTH_VW - 60); 
+  // Cap camera so finish line (TRACK_LENGTH_VW) appears at 70vw (near right edge of the 75vw track container)
+  cameraX = Math.min(cameraX, TRACK_LENGTH_VW - 70); 
   const bgScrollX = -cameraX; // Background scrolls 1:1 with camera
 
   return (
@@ -83,10 +83,14 @@ const RaceTrack = () => {
             {/* Scenery: Sky & Grass (Parallax) */}
             <div className="h-1/5 sky-pattern scene-transition" style={{ backgroundPositionX: `${bgScrollX * 0.5}vw` }}></div>
             <div className="h-12 grass-pattern scene-transition relative" style={{ backgroundPositionX: `${bgScrollX}vw` }}>
-              {/* Moving bushes */}
-              <div className="absolute top-2 w-16 h-8 bg-green-700 rounded-t-full opacity-80 scene-transition" style={{ transform: `translateX(${10 - cameraX}vw)` }}></div>
-              <div className="absolute top-4 w-12 h-6 bg-green-800 rounded-t-full opacity-80 scene-transition" style={{ transform: `translateX(${40 - cameraX}vw)` }}></div>
-              <div className="absolute top-1 w-24 h-10 bg-green-700 rounded-t-full opacity-80 scene-transition" style={{ transform: `translateX(${80 - cameraX}vw)` }}></div>
+              {/* Dynamically generated moving bushes spanning the entire 300vw track */}
+              {Array.from({ length: 15 }).map((_, i) => (
+                <div key={`bush-${i}`} className={`absolute bottom-0 rounded-t-full opacity-80 scene-transition ${i % 2 === 0 ? 'bg-green-700 w-16 h-8' : 'bg-green-800 w-12 h-6'}`} style={{ transform: `translateX(${i * 20 + 10 - cameraX}vw)` }}></div>
+              ))}
+              {/* Distance markers to make camera panning extremely obvious */}
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={`marker-${i}`} className="absolute top-1 text-white/70 font-bold text-[10px] px-1 bg-black/30 rounded scene-transition" style={{ transform: `translateX(${i * 50 + 50 - cameraX}vw)` }}>{i * 50 + 50}m</div>
+              ))}
             </div>
             
             {/* Scenery: River Race Track */}
