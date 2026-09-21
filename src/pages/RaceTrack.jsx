@@ -129,7 +129,7 @@ const RaceTrack = () => {
                 return (
                   <div 
                     key={duck.id}
-                    className="absolute flex flex-col items-center duck-smooth scale-[0.65] sm:scale-[0.8] md:scale-100 origin-bottom" 
+                    className="absolute flex flex-col items-center duck-smooth scale-[0.45] sm:scale-[0.6] md:scale-100 origin-bottom" 
                     style={{ 
                       transform: `translateX(${duckScreenX}vw)`,
                       left: 0,
