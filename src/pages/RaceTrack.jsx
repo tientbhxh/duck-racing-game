@@ -76,21 +76,21 @@ const RaceTrack = () => {
         {raceStatus !== 'matching' && (
           <div className="flex-1 relative flex flex-col overflow-hidden bg-white dark:bg-slate-800">
             {/* Scenery: Sky & Grass (Parallax) */}
-            <div className="h-1/5 sky-pattern" style={{ backgroundPositionX: `${bgScrollX * 0.5}vw` }}></div>
-            <div className="h-12 grass-pattern relative" style={{ backgroundPositionX: `${bgScrollX}vw` }}>
+            <div className="h-1/5 sky-pattern scene-transition" style={{ backgroundPositionX: `${bgScrollX * 0.5}vw` }}></div>
+            <div className="h-12 grass-pattern scene-transition relative" style={{ backgroundPositionX: `${bgScrollX}vw` }}>
               {/* Moving bushes */}
-              <div className="absolute top-2 w-16 h-8 bg-green-700 rounded-t-full opacity-80 transition-transform" style={{ transform: `translateX(${10 - cameraX}vw)` }}></div>
-              <div className="absolute top-4 w-12 h-6 bg-green-800 rounded-t-full opacity-80 transition-transform" style={{ transform: `translateX(${40 - cameraX}vw)` }}></div>
-              <div className="absolute top-1 w-24 h-10 bg-green-700 rounded-t-full opacity-80 transition-transform" style={{ transform: `translateX(${80 - cameraX}vw)` }}></div>
+              <div className="absolute top-2 w-16 h-8 bg-green-700 rounded-t-full opacity-80 scene-transition" style={{ transform: `translateX(${10 - cameraX}vw)` }}></div>
+              <div className="absolute top-4 w-12 h-6 bg-green-800 rounded-t-full opacity-80 scene-transition" style={{ transform: `translateX(${40 - cameraX}vw)` }}></div>
+              <div className="absolute top-1 w-24 h-10 bg-green-700 rounded-t-full opacity-80 scene-transition" style={{ transform: `translateX(${80 - cameraX}vw)` }}></div>
             </div>
             
             {/* Scenery: River Race Track */}
-            <div className="flex-1 river-pattern river-waves relative" style={{ backgroundPositionX: `${bgScrollX * 1.5}vw` }}>
+            <div className="flex-1 river-pattern river-waves scene-transition relative" style={{ backgroundPositionX: `${bgScrollX * 1.5}vw` }}>
               {/* Start Line */}
-              <div className="absolute top-0 bottom-0 w-2 bg-white/40 border-l-4 border-dashed border-white transition-transform" style={{ transform: `translateX(${10 - cameraX}vw)`, left: 0 }}></div>
+              <div className="absolute top-0 bottom-0 w-2 bg-white/40 border-l-4 border-dashed border-white scene-transition" style={{ transform: `translateX(${10 - cameraX}vw)`, left: 0 }}></div>
               
               {/* Finish Line (at 300 progress) */}
-              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black transition-transform" style={{ transform: `translateX(${300 - cameraX}vw)`, left: 0 }}>
+              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black scene-transition" style={{ transform: `translateX(${300 - cameraX}vw)`, left: 0 }}>
                 {Array.from({ length: 20 }).map((_, i) => (
                   <div key={i} className="flex-1 w-full flex">
                     <div className={`flex-1 ${i % 2 === 0 ? 'bg-white' : 'bg-black'}`}></div>
