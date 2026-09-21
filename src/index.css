@@ -91,11 +91,11 @@
 }
 
 .duck-smooth {
-  transition: transform 0.5s linear, top 0.5s linear;
+  transition: transform 0.4s linear, top 0.4s linear;
 }
 
 .scene-transition {
-  transition: transform 0.5s linear, background-position 0.5s linear;
+  transition: transform 0.4s linear, background-position 0.4s linear;
 }
 
 @keyframes paddle {

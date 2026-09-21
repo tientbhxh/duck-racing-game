@@ -192,9 +192,11 @@ const AdminPanel = () => {
 
           // Drama mechanic 2: The Final Scramble
           if (maxProgress > 850 && maxProgress < 970) {
-            if (duck.id === leaderId) {
-              // Forced slow down for the leader near the end
-              stumbleTicks = 2; 
+            if (duck.id === leaderId && stumbleTicks === 0) {
+              // Forced slow down for the leader near the end, but only occasionally!
+              if (Math.random() > 0.75) {
+                stumbleTicks = 2; 
+              }
             } else if (duck.progress > maxProgress - 200 && burstTicks === 0) {
               if (Math.random() > 0.70) {
                 burstTicks = 4; // Long sprint to the finish

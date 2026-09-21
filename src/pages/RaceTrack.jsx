@@ -91,7 +91,7 @@ const RaceTrack = () => {
         {/* Track Elements (Hidden during matching) */}
         {raceStatus !== 'matching' && (
           <div className="flex-1 flex flex-col justify-center items-center bg-slate-950 w-full overflow-hidden">
-            <div className="w-full aspect-video md:aspect-auto md:flex-1 relative flex flex-col overflow-hidden bg-white dark:bg-slate-800 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            <div className="w-full aspect-square md:aspect-auto md:flex-1 relative flex flex-col overflow-hidden bg-white dark:bg-slate-800 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
               {/* Scenery: Sky & Grass (Parallax) */}
             <div className="h-1/5 sky-pattern scene-transition" style={{ backgroundPositionX: `${bgScrollX * 0.5}vw` }}></div>
             <div className="h-12 grass-pattern scene-transition relative" style={{ backgroundPositionX: `${bgScrollX}vw` }}>
