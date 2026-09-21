@@ -35,7 +35,17 @@
 }
 
 .duck-smooth {
-  transition: transform 0.4s linear, top 0.4s linear;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.4s ease-out;
+}
+
+@keyframes paddle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(-3deg); }
+  75% { transform: translateY(2px) rotate(3deg); }
+}
+
+.animate-paddle {
+  animation: paddle 0.6s infinite ease-in-out;
 }
 
 /* Custom Duck Animation styles */

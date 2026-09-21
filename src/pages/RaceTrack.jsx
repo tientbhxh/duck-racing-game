@@ -111,7 +111,7 @@ const RaceTrack = () => {
                       zIndex: Math.round(duck.topOffset)
                     }}
                   >
-                    <div className="relative group">
+                    <div className="relative group animate-paddle" style={{ animationDelay: `${duck.id * -0.15}s` }}>
                       {/* Persistent Name Tag */}
                       {duck.playerName && (
                         <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap z-50 shadow">
