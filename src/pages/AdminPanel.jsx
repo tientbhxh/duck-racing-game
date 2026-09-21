@@ -9,6 +9,7 @@ const AdminPanel = () => {
   const [duration, setDuration] = useState(30);
   const [raceStatus, setRaceStatus] = useState('idle');
   const [ducks, setDucks] = useState([]);
+  const [prizeContent, setPrizeContent] = useState('');
   const raceLoopRef = useRef(null);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const AdminPanel = () => {
         setRaceStatus(data.status || 'idle');
         setDucks(data.ducks || []);
         if (data.duration) setDuration(data.duration);
+        if (data.prize) setPrizeContent(data.prize);
       }
     });
     return () => unsubscribe();
@@ -43,7 +45,8 @@ const AdminPanel = () => {
       status: 'idle',
       duration: parseInt(duration),
       ducks: cleanDucks,
-      winner: null
+      winner: null,
+      prize: prizeContent
     });
     alert('Đã cập nhật danh sách Vịt! Bạn hãy bốc thăm để gán người chơi.');
   };
@@ -87,28 +90,46 @@ const AdminPanel = () => {
     
     raceLoopRef.current = setInterval(() => {
       setDucks((currentDucks) => {
-        let allFinished = true;
+        let winnerFound = false;
+        
+        // Check if any duck has reached or crossed the finish line
+        const winner = currentDucks.find(d => d.progress >= 1000);
+        if (winner) {
+           winnerFound = true;
+           // If a winner is found, ONLY move the winner forward quickly. Stop everyone else.
+           const newDucks = currentDucks.map(duck => {
+             if (duck.id === winner.id) {
+                return { ...duck, progress: Math.min(1200, duck.progress + 20) };
+             }
+             return duck;
+           });
+           
+           update(dbRef('raceState'), { ducks: newDucks });
+
+           // Once the winner finishes their solo lap (reaches 1200), end the race
+           if (winner.progress >= 1200) {
+             clearInterval(raceLoopRef.current);
+             update(dbRef('raceState'), { status: 'finished', winner: winner });
+           }
+           
+           return newDucks;
+        }
+
+        // Normal racing logic if no one has finished yet
+        const baseStep = 1000 / (duration * 2.5);
         const newDucks = currentDucks.map(duck => {
-          if (duck.progress >= 1000) return duck; // Target distance 1000 (abstract unit)
-          allFinished = false;
-          
-          // Progress per tick (400ms) = 1000 / (duration * 2.5 ticks/sec)
-          const baseStep = 1000 / (duration * 2.5);
           const isBurst = Math.random() > 0.85; 
-          const step = baseStep * (isBurst ? (Math.random() * 3 + 1) : Math.random() + 0.5);
+          // Increase burst to 1.5x - 5.5x for more separation
+          // Normal speed varies from 0.2x to 1.7x
+          const step = baseStep * (isBurst ? (Math.random() * 4 + 1.5) : Math.random() * 1.5 + 0.2);
 
           return {
             ...duck,
-            progress: Math.min(1000, duck.progress + step)
+            progress: duck.progress + step
           };
         });
 
         update(dbRef('raceState'), { ducks: newDucks });
-
-        if (allFinished) {
-          clearInterval(raceLoopRef.current);
-          update(dbRef('raceState'), { status: 'finished' });
-        }
         return newDucks;
       });
     }, 400); // 2.5 ticks per second for smoothing
@@ -170,6 +191,16 @@ const AdminPanel = () => {
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
               className="w-full px-4 py-2 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none dark:bg-slate-700 dark:border-slate-600" 
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium">Nội dung giải thưởng (Ví dụ: Thẻ cào 50k):</label>
+            <input 
+              type="text" 
+              value={prizeContent}
+              onChange={(e) => setPrizeContent(e.target.value)}
+              className="w-full px-4 py-2 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none dark:bg-slate-700 dark:border-slate-600" 
+              placeholder="Giải nhất: 1 phần quà bí mật..."
             />
           </div>
           <div className="flex space-x-4">

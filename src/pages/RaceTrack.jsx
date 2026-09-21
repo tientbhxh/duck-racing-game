@@ -7,6 +7,8 @@ const RaceTrack = () => {
   const [ducks, setDucks] = useState([]);
   const [raceStatus, setRaceStatus] = useState('idle');
   const [revealedCount, setRevealedCount] = useState(0);
+  const [winner, setWinner] = useState(null);
+  const [prizeContent, setPrizeContent] = useState('');
 
   useEffect(() => {
     const raceRef = dbRef('raceState');
@@ -15,6 +17,9 @@ const RaceTrack = () => {
       if (data) {
         if (data.ducks) setDucks(data.ducks);
         if (data.status) setRaceStatus(data.status);
+        if (data.winner) setWinner(data.winner);
+        else setWinner(null);
+        if (data.prize) setPrizeContent(data.prize);
       }
     });
     return () => unsubscribe();
@@ -107,6 +112,9 @@ const RaceTrack = () => {
                   </div>
                 ))}
               </div>
+              <div className="absolute top-0 w-32 h-10 bg-red-600 border-4 border-yellow-400 flex items-center justify-center text-white font-black text-lg z-10 rounded shadow-[0_0_15px_red] scene-transition" style={{ transform: `translateX(${TRACK_LENGTH_VW - cameraX - 6}vw)`, left: 0 }}>
+                ĐÍCH ĐẾN
+              </div>
               
               <div className="absolute inset-0">
               {ducks.map((duck) => {
@@ -134,6 +142,28 @@ const RaceTrack = () => {
                   </div>
                 );
               })}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Winner Celebration Overlay */}
+        {raceStatus === 'finished' && winner && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in">
+            <div className="bg-gradient-to-b from-yellow-400 to-yellow-600 p-1 rounded-2xl shadow-[0_0_50px_yellow] animate-bounce">
+              <div className="bg-slate-900 rounded-xl p-8 flex flex-col items-center max-w-md text-center">
+                <h2 className="text-4xl font-black text-yellow-400 mb-2 uppercase">NHÀ VÔ ĐỊCH!</h2>
+                <div className="scale-150 my-6 origin-center">
+                  <DuckSVG color={winner.color} hat={winner.hat} accessory={winner.accessory} number={winner.id} />
+                </div>
+                <div className="text-3xl font-bold text-white mb-2">{winner.playerName}</div>
+                <div className="text-yellow-400 text-lg mb-4">{winner.name}</div>
+                {prizeContent && (
+                  <div className="mt-4 p-4 bg-yellow-500/20 border-2 border-yellow-400 rounded-lg w-full">
+                    <div className="text-yellow-400 font-bold uppercase text-sm mb-1">Phần Thưởng</div>
+                    <div className="text-white font-bold text-xl">{prizeContent}</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
