@@ -89,17 +89,17 @@ const AdminPanel = () => {
       setDucks((currentDucks) => {
         let allFinished = true;
         const newDucks = currentDucks.map(duck => {
-          if (duck.progress >= 300) return duck; // Target distance 300 (camera panning but slow speed)
+          if (duck.progress >= 1000) return duck; // Target distance 1000 (abstract unit)
           allFinished = false;
           
-          // Progress per tick (400ms) = 300 / (duration * 2.5 ticks/sec)
-          const baseStep = 300 / (duration * 2.5);
+          // Progress per tick (400ms) = 1000 / (duration * 2.5 ticks/sec)
+          const baseStep = 1000 / (duration * 2.5);
           const isBurst = Math.random() > 0.85; 
           const step = baseStep * (isBurst ? (Math.random() * 3 + 1) : Math.random() + 0.5);
 
           return {
             ...duck,
-            progress: Math.min(300, duck.progress + step)
+            progress: Math.min(1000, duck.progress + step)
           };
         });
 

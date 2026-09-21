@@ -30,11 +30,16 @@ const RaceTrack = () => {
     }
   }, [raceStatus]);
 
+  const TRACK_LENGTH_VW = 150; // Total physical length of the track in vw
+  const progressToVw = (p) => (p / 1000) * TRACK_LENGTH_VW;
+
   const maxProgress = ducks.length > 0 ? Math.max(...ducks.map(d => d.progress)) : 0;
-  // Camera tries to keep the leader at 60vw. 
-  let cameraX = Math.max(0, maxProgress - 60); 
-  // Max camera is 200, so that the finish line (at 300) appears at 100vw (the right edge)
-  cameraX = Math.min(cameraX, 200); 
+  const maxVw = progressToVw(maxProgress);
+
+  // Camera keeps the leader at exactly 30vw (center-left) to track perfectly. 
+  let cameraX = Math.max(0, maxVw - 30); 
+  // Cap camera so finish line (TRACK_LENGTH_VW) reaches 100vw edge max (assuming container is ~75vw, subtract 60)
+  cameraX = Math.min(cameraX, TRACK_LENGTH_VW - 60); 
   const bgScrollX = -cameraX; // Background scrolls 1:1 with camera
 
   return (
@@ -89,8 +94,8 @@ const RaceTrack = () => {
               {/* Start Line */}
               <div className="absolute top-0 bottom-0 w-2 bg-white/40 border-l-4 border-dashed border-white scene-transition" style={{ transform: `translateX(${10 - cameraX}vw)`, left: 0 }}></div>
               
-              {/* Finish Line (at 300 progress) */}
-              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black scene-transition" style={{ transform: `translateX(${300 - cameraX}vw)`, left: 0 }}>
+              {/* Finish Line */}
+              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black scene-transition" style={{ transform: `translateX(${TRACK_LENGTH_VW - cameraX}vw)`, left: 0 }}>
                 {Array.from({ length: 20 }).map((_, i) => (
                   <div key={i} className="flex-1 w-full flex">
                     <div className={`flex-1 ${i % 2 === 0 ? 'bg-white' : 'bg-black'}`}></div>
@@ -101,7 +106,7 @@ const RaceTrack = () => {
               
               <div className="absolute inset-0">
               {ducks.map((duck) => {
-                const duckScreenX = duck.progress - cameraX;
+                const duckScreenX = progressToVw(duck.progress) - cameraX;
                 return (
                   <div 
                     key={duck.id}
