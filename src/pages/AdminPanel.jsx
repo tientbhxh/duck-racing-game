@@ -154,20 +154,21 @@ const AdminPanel = () => {
 
   if (!isAdmin) {
     return (
-      <div className="flex justify-center items-center h-[70vh]">
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg w-96">
-          <h2 className="text-2xl font-bold mb-6 text-center">Đăng nhập Admin</h2>
-          <form onSubmit={handleLogin} className="space-y-4">
+      <div className="flex justify-center items-center min-h-[70vh] relative z-10">
+        <div className="glass-card p-10 rounded-3xl w-full max-w-md relative overflow-hidden group">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400"></div>
+          <h2 className="text-3xl font-black mb-8 text-center text-gradient">Đăng nhập Admin</h2>
+          <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <input 
                 type="password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Nhập mật khẩu..."
-                className="w-full px-4 py-2 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none dark:bg-slate-700 dark:border-slate-600"
+                className="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-white transition-all shadow-inner backdrop-blur-sm"
               />
             </div>
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+            <button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all transform hover:-translate-y-1 active:translate-y-0">
               Đăng nhập
             </button>
           </form>
@@ -177,63 +178,73 @@ const AdminPanel = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Cấu hình cuộc đua</h2>
-        <div className="space-y-4">
+    <div className="max-w-4xl mx-auto space-y-8 relative z-10 animate-fade-in">
+      <div className="glass-card p-8 rounded-3xl relative overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-400 to-emerald-400"></div>
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-emerald-400">Cấu hình cuộc đua</h2>
+        <div className="space-y-6">
           <div>
-            <label className="block mb-2 font-medium">Danh sách Người chơi (Tối đa 30, mỗi dòng 1 tên):</label>
-            <p className="text-sm text-slate-500 mb-2">Hệ thống sẽ tự động ghép tên người chơi vào 30 chú vịt vui nhộn ngẫu nhiên.</p>
+            <label className="block mb-2 font-semibold text-slate-300">Danh sách Người chơi (Tối đa 30, mỗi dòng 1 tên):</label>
+            <p className="text-sm text-slate-400 mb-3">Hệ thống sẽ tự động ghép tên người chơi vào 30 chú vịt vui nhộn ngẫu nhiên.</p>
             <textarea 
               value={playerNames}
               onChange={(e) => setPlayerNames(e.target.value)}
-              className="w-full h-48 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none dark:bg-slate-700 dark:border-slate-600"
+              className="w-full h-48 px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-white transition-all shadow-inner backdrop-blur-sm custom-scrollbar"
               placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Lê Văn C"
             ></textarea>
           </div>
-          <div>
-            <label className="block mb-2 font-medium">Thời gian đua dự kiến (giây):</label>
-            <input 
-              type="number" 
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              className="w-full px-4 py-2 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none dark:bg-slate-700 dark:border-slate-600" 
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block mb-2 font-semibold text-slate-300">Thời gian đua dự kiến (giây):</label>
+              <input 
+                type="number" 
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                className="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-white transition-all shadow-inner backdrop-blur-sm" 
+              />
+            </div>
+            <div>
+              <label className="block mb-2 font-semibold text-slate-300">Nội dung giải thưởng (Ví dụ: Thẻ cào 50k):</label>
+              <input 
+                type="text" 
+                value={prizeContent}
+                onChange={(e) => setPrizeContent(e.target.value)}
+                className="w-full px-5 py-4 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-white transition-all shadow-inner backdrop-blur-sm" 
+                placeholder="Giải nhất: 1 phần quà bí mật..."
+              />
+            </div>
           </div>
-          <div>
-            <label className="block mb-2 font-medium">Nội dung giải thưởng (Ví dụ: Thẻ cào 50k):</label>
-            <input 
-              type="text" 
-              value={prizeContent}
-              onChange={(e) => setPrizeContent(e.target.value)}
-              className="w-full px-4 py-2 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-600 outline-none dark:bg-slate-700 dark:border-slate-600" 
-              placeholder="Giải nhất: 1 phần quà bí mật..."
-            />
-          </div>
-          <div className="flex space-x-4">
-            <button onClick={handleUpdateConfig} className="bg-green-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors">
-              Cập nhật cấu hình
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
+            <button onClick={handleUpdateConfig} className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-4 rounded-xl font-bold shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all transform hover:-translate-y-1 active:translate-y-0">
+              💾 Cập nhật cấu hình
             </button>
-            <button onClick={handleMatchmaking} disabled={raceStatus === 'running'} className="disabled:opacity-50 bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-              Bốc thăm ngẫu nhiên
+            <button onClick={handleMatchmaking} disabled={raceStatus === 'running'} className="flex-1 disabled:opacity-50 disabled:transform-none disabled:hover:shadow-none bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-4 rounded-xl font-bold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all transform hover:-translate-y-1 active:translate-y-0">
+              🎲 Bốc thăm ngẫu nhiên
             </button>
           </div>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Điều khiển (Trạng thái: {raceStatus})</h2>
-        <div className="flex space-x-4">
+      <div className="glass-card p-8 rounded-3xl relative overflow-hidden">
+        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-400 to-indigo-400"></div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-blue-400">Điều khiển</h2>
+          <div className="bg-slate-800/80 px-4 py-2 rounded-lg border border-slate-700 mt-2 md:mt-0 font-mono text-sm shadow-inner">
+            Trạng thái: <span className="text-white font-bold">{raceStatus.toUpperCase()}</span>
+          </div>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           {raceStatus === 'matching' && (
-            <button onClick={handleReady} className="bg-yellow-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-yellow-600 transition-colors">
-              Vào vị trí (Sẵn sàng)
+            <button onClick={handleReady} className="flex-1 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 text-white px-6 py-4 rounded-xl font-bold shadow-lg shadow-yellow-500/30 hover:shadow-yellow-500/50 transition-all transform hover:-translate-y-1 active:translate-y-0">
+              ✨ Vào vị trí (Sẵn sàng)
             </button>
           )}
-          <button onClick={handleStartRace} disabled={raceStatus !== 'ready'} className="disabled:opacity-50 bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-            Bắt đầu đua ngay
+          <button onClick={handleStartRace} disabled={raceStatus !== 'ready'} className="flex-1 disabled:opacity-50 disabled:transform-none disabled:hover:shadow-none bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-6 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all transform hover:-translate-y-1 active:translate-y-0 text-xl tracking-wide">
+            🚀 BẮT ĐẦU ĐUA
           </button>
-          <button onClick={handleReset} className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
-            Làm lại (Reset)
+          <button onClick={handleReset} className="sm:flex-none bg-slate-700 hover:bg-red-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-red-500/50 transition-all transform hover:-translate-y-1 active:translate-y-0">
+            Làm lại
           </button>
         </div>
       </div>

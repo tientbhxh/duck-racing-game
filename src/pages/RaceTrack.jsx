@@ -52,28 +52,35 @@ const RaceTrack = () => {
     // Desktop: flex-row, Track exactly 75%, Chat exactly 25%
     <div className="flex flex-col md:flex-row h-[calc(100vh-80px)] md:h-[85vh] gap-4">
       {/* Race Track Container */}
-      <div className="flex-none md:flex-none h-[45vh] md:h-full w-full md:w-3/4 bg-slate-900 rounded-xl shadow-lg overflow-hidden flex flex-col relative">
-        <div className="p-2 md:p-4 bg-blue-600 text-white font-bold text-sm md:text-lg flex justify-between z-20 shadow-md">
-          <span>Trường Đua Vịt {raceStatus === 'matching' ? '(Bốc thăm...)' : ''}</span>
-          <span>Sĩ số: {ducks.filter(d => d.playerName).length}/30</span>
+      <div className="flex-none md:flex-none h-[45vh] md:h-full w-full md:w-3/4 glass-card rounded-2xl overflow-hidden flex flex-col relative border-4 border-slate-700/50 shadow-2xl">
+        <div className="px-4 py-3 bg-slate-900/80 backdrop-blur-md text-white font-bold text-sm md:text-lg flex justify-between z-20 border-b border-slate-700 shadow-lg">
+          <span className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+            TRƯỜNG ĐUA VỊT {raceStatus === 'matching' ? <span className="text-yellow-400 ml-2">(Đang bốc thăm...)</span> : ''}
+          </span>
+          <span className="bg-blue-500/20 px-3 py-1 rounded-full text-blue-300 border border-blue-500/30 text-sm">
+            SĨ SỐ: {ducks.filter(d => d.playerName).length}/30
+          </span>
         </div>
         
         {/* Matchmaking Overlay */}
         {raceStatus === 'matching' && (
-          <div className="absolute inset-0 top-[60px] bg-slate-900 z-50 flex flex-col items-center justify-start pt-8 overflow-y-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-yellow-400 mb-6 animate-pulse">ĐANG BỐC THĂM TỪNG NGƯỜI CHƠI...</h2>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 w-full px-4">
+          <div className="absolute inset-0 top-[60px] bg-slate-900/90 backdrop-blur-sm z-50 flex flex-col items-center justify-start pt-8 overflow-y-auto custom-scrollbar pb-8">
+            <h2 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-500 mb-8 animate-pulse tracking-wide drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
+              ĐANG BỐC THĂM TỪNG NGƯỜI CHƠI...
+            </h2>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 w-full px-6">
               {ducks.filter(d => d.playerName).map((duck, idx) => {
                 if (idx > revealedCount) return null;
                 const isJustRevealed = idx === revealedCount;
                 
                 return (
-                  <div key={duck.id} className={`bg-white/10 rounded-lg p-2 flex flex-col items-center border border-white/20 transition-all ${isJustRevealed ? 'scale-110 shadow-[0_0_15px_yellow]' : 'scale-100'}`}>
-                    <div className="scale-75 origin-top">
+                  <div key={duck.id} className={`glass-panel rounded-xl p-3 flex flex-col items-center transition-all duration-500 ${isJustRevealed ? 'scale-110 shadow-[0_0_30px_rgba(250,204,21,0.6)] border-yellow-400/50' : 'scale-100'}`}>
+                    <div className="scale-75 origin-top drop-shadow-lg">
                       <DuckSVG color={duck.color} hat={duck.hat} accessory={duck.accessory} number={duck.id} />
                     </div>
-                    <div className="text-white font-bold mt-1 text-center text-xs break-words w-full px-1">{duck.playerName}</div>
-                    <div className="text-yellow-400 text-[10px] text-center leading-tight mt-1">{duck.name}</div>
+                    <div className="text-white font-bold mt-2 text-center text-xs break-words w-full px-1">{duck.playerName}</div>
+                    <div className="text-yellow-400 text-[10px] font-medium text-center leading-tight mt-1 bg-black/30 px-2 py-0.5 rounded-full">{duck.name}</div>
                   </div>
                 );
               })}
@@ -132,7 +139,7 @@ const RaceTrack = () => {
                     <div className="relative group animate-paddle" style={{ animationDelay: `${duck.id * -0.15}s` }}>
                       {/* Persistent Name Tag */}
                       {duck.playerName && (
-                        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap z-50 shadow">
+                        <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-slate-900/80 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap z-50 shadow-lg">
                           {duck.playerName}
                         </div>
                       )}
@@ -148,19 +155,24 @@ const RaceTrack = () => {
         
         {/* Winner Celebration Overlay */}
         {raceStatus === 'finished' && winner && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 animate-fade-in">
-            <div className="bg-gradient-to-b from-yellow-400 to-yellow-600 p-1 rounded-2xl shadow-[0_0_50px_yellow] scale-110">
-              <div className="bg-slate-900 rounded-xl p-8 flex flex-col items-center max-w-md text-center">
-                <h2 className="text-4xl font-black text-yellow-400 mb-2 uppercase">NHÀ VÔ ĐỊCH!</h2>
-                <div className="scale-150 my-6 origin-center">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-fade-in">
+            <div className="bg-gradient-to-br from-yellow-300 via-yellow-500 to-orange-600 p-[2px] rounded-3xl shadow-[0_0_80px_rgba(250,204,21,0.5)] scale-110">
+              <div className="bg-slate-900/95 backdrop-blur-xl rounded-3xl p-10 flex flex-col items-center max-w-md text-center relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-yellow-500/20 to-transparent"></div>
+                <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-yellow-200 to-yellow-500 mb-2 uppercase drop-shadow-md z-10">NHÀ VÔ ĐỊCH!</h2>
+                
+                <div className="scale-150 my-8 origin-center z-10 drop-shadow-2xl">
                   <DuckSVG color={winner.color} hat={winner.hat} accessory={winner.accessory} number={winner.id} />
                 </div>
-                <div className="text-3xl font-bold text-white mb-2">{winner.playerName}</div>
-                <div className="text-yellow-400 text-lg mb-4">{winner.name}</div>
+                
+                <div className="text-4xl font-black text-white mb-2 z-10 tracking-tight">{winner.playerName}</div>
+                <div className="text-yellow-400 text-xl font-medium mb-6 z-10 bg-yellow-500/10 px-4 py-1 rounded-full border border-yellow-500/30">{winner.name}</div>
+                
                 {prizeContent && (
-                  <div className="mt-4 p-4 bg-yellow-500/20 border-2 border-yellow-400 rounded-lg w-full">
-                    <div className="text-yellow-400 font-bold uppercase text-sm mb-1">Phần Thưởng</div>
-                    <div className="text-white font-bold text-xl">{prizeContent}</div>
+                  <div className="mt-2 p-5 bg-gradient-to-r from-yellow-900/50 via-orange-900/50 to-yellow-900/50 border border-yellow-500/40 rounded-2xl w-full z-10 relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-yellow-400/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <div className="text-yellow-400 font-bold uppercase text-xs mb-2 tracking-widest">Phần Thưởng</div>
+                    <div className="text-white font-black text-2xl drop-shadow-md">{prizeContent}</div>
                   </div>
                 )}
               </div>
@@ -170,7 +182,7 @@ const RaceTrack = () => {
       </div>
       
       {/* Chat Box Container */}
-      <div className="flex-1 md:flex-none w-full md:w-1/4 min-h-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg flex flex-col">
+      <div className="flex-1 md:flex-none w-full md:w-1/4 min-h-0 glass-card rounded-2xl flex flex-col">
         <ChatBox />
       </div>
     </div>
