@@ -101,6 +101,9 @@ const AdminPanel = () => {
       }
     });
 
+    // Final shuffle to ensure manually mapped players don't always appear first in the UI
+    configuredDucks.sort(() => Math.random() - 0.5);
+
     update(dbRef('raceState'), { 
       status: 'matching',
       ducks: configuredDucks 
