@@ -90,9 +90,9 @@ const AdminPanel = () => {
       }
     });
     
-    // Shuffle remaining players and remaining ducks
-    remainingPlayers.sort(() => Math.random() - 0.5);
-    remainingDucks.sort(() => Math.random() - 0.5);
+    // Shuffle remaining players and remaining ducks robustly
+    remainingPlayers = remainingPlayers.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value);
+    remainingDucks = remainingDucks.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value);
     
     // Assign remaining players
     remainingPlayers.forEach((playerName, idx) => {
@@ -101,8 +101,11 @@ const AdminPanel = () => {
       }
     });
 
-    // Final shuffle to ensure manually mapped players don't always appear first in the UI
-    configuredDucks.sort(() => Math.random() - 0.5);
+    // Final robust shuffle to ensure manually mapped players don't always appear first
+    configuredDucks = configuredDucks
+      .map(value => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
 
     update(dbRef('raceState'), { 
       status: 'matching',
