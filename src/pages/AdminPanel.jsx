@@ -56,22 +56,43 @@ const AdminPanel = () => {
   };
 
   const handleMatchmaking = () => {
-    let names = playerNames.split('\n').map(n => n.trim()).filter(n => n.length > 0);
-    if (names.length === 0) {
+    let rawLines = playerNames.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+    if (rawLines.length === 0) {
       alert('Vui lòng nhập ít nhất 1 người chơi.');
       return;
     }
     
-    // Shuffle the player names
-    names.sort(() => Math.random() - 0.5);
-    
     let initialDucks = getInitialRaceState();
-    initialDucks.sort(() => Math.random() - 0.5);
+    let configuredDucks = [];
+    let remainingPlayers = [];
+    let remainingDucks = [...initialDucks];
     
-    const configuredDucks = initialDucks.slice(0, Math.min(names.length, 30)).map((duck, idx) => ({
-      ...duck,
-      playerName: names[idx]
-    }));
+    // Parse forced mappings (e.g. "Nguyễn Văn A: Vịt Sịp Hồng")
+    rawLines.forEach(line => {
+      if (line.includes(':')) {
+        const [playerName, preferredDuckName] = line.split(':').map(s => s.trim());
+        const duckIndex = remainingDucks.findIndex(d => d.name.toLowerCase() === preferredDuckName.toLowerCase());
+        if (duckIndex !== -1) {
+          const duck = remainingDucks.splice(duckIndex, 1)[0];
+          configuredDucks.push({ ...duck, playerName });
+        } else {
+          remainingPlayers.push(playerName); // Fallback to random if duck not found
+        }
+      } else {
+        remainingPlayers.push(line);
+      }
+    });
+    
+    // Shuffle remaining players and remaining ducks
+    remainingPlayers.sort(() => Math.random() - 0.5);
+    remainingDucks.sort(() => Math.random() - 0.5);
+    
+    // Assign remaining players
+    remainingPlayers.forEach((playerName, idx) => {
+      if (idx < remainingDucks.length) {
+        configuredDucks.push({ ...remainingDucks[idx], playerName });
+      }
+    });
 
     update(dbRef('raceState'), { 
       status: 'matching',
@@ -135,21 +156,30 @@ const AdminPanel = () => {
         const baseStep = 1000 / (duration * 2.5);
         const newDucks = currentDucks.map(duck => {
           // Increase variance for natural separation (0.3x to 1.3x)
-          let isBurst = Math.random() > 0.95; // 5% chance of burst
+          let isBurst = Math.random() > 0.95; 
           let multiplier = isBurst ? (Math.random() * 2.5 + 3.0) : (Math.random() * 1.0 + 0.3);
 
-          // Drama mechanic: Intense scramble near the finish line (Rubber-banding)
-          // Only apply between 800 and 970 so they don't freeze right on the finish line
-          if (maxProgress > 800 && maxProgress < 970) {
+          // Drama mechanic 1: Continuous chaotic lead changes throughout the race
+          if (maxProgress > 100 && maxProgress < 970) {
+            if (duck.id === leaderId && Math.random() > 0.70) { 
+              // 30% chance every tick for the leader to stumble dramatically (stops swimming)
+              multiplier = Math.random() * 0.1; 
+            } else if (duck.progress < maxProgress - 80 && Math.random() > 0.75) { 
+              // 25% chance for ducks far behind to get a massive rocket boost!
+              multiplier = Math.random() * 4.0 + 4.0; // 4x - 8x burst!
+            }
+          }
+
+          // Drama mechanic 2: The Final Scramble (Rubber-banding near the finish line)
+          // Only apply between 850 and 970 so they don't freeze right on the finish line
+          if (maxProgress > 850 && maxProgress < 970) {
             if (duck.id === leaderId) {
-              // The leader gets nervous and slows down
-              isBurst = false;
-              multiplier = Math.random() * 0.4 + 0.5; // 0.5x - 0.9x
+              // The leader gets nervous and is forced to slow down
+              multiplier = Math.random() * 0.4 + 0.2; // 0.2x - 0.6x
             } else if (duck.progress > maxProgress - 200) {
               // The trailing ducks get a huge adrenaline rush!
-              isBurst = Math.random() > 0.50; // 50% chance to burst
-              if (isBurst) {
-                multiplier = Math.random() * 2.0 + 3.5; // Massive 3.5x - 5.5x burst!
+              if (Math.random() > 0.50) {
+                multiplier = Math.random() * 3.0 + 4.0; // Massive 4.0x - 7.0x burst!
               }
             }
           }
@@ -211,7 +241,10 @@ const AdminPanel = () => {
         <div className="space-y-6">
           <div>
             <label className="block mb-2 font-semibold text-slate-300">Danh sách Người chơi (Tối đa 30, mỗi dòng 1 tên):</label>
-            <p className="text-sm text-slate-400 mb-3">Hệ thống sẽ tự động ghép tên người chơi vào 30 chú vịt vui nhộn ngẫu nhiên.</p>
+            <p className="text-sm text-slate-400 mb-3">
+              Hệ thống sẽ tự động ghép tên người chơi vào 30 chú vịt vui nhộn ngẫu nhiên. 
+              <br/><span className="text-yellow-400 font-bold">MẸO:</span> Để gán cố định 1 người chơi vào 1 chú vịt cụ thể (nhằm mục đích trêu đùa), hãy gõ theo cú pháp: <code className="bg-slate-700 px-1 rounded text-yellow-300">Tên người: Tên vịt</code> (Ví dụ: <i>Nguyễn Văn A: Vịt Sịp Hồng</i>).
+            </p>
             <textarea 
               value={playerNames}
               onChange={(e) => setPlayerNames(e.target.value)}
