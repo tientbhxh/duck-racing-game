@@ -193,13 +193,11 @@ const AdminPanel = () => {
           // Drama mechanic 2: The Final Scramble
           if (maxProgress > 850 && maxProgress < 970) {
             if (duck.id === leaderId && stumbleTicks === 0 && burstTicks === 0) {
-               // Leader gets nervous and stumbles (almost guaranteed, but only if not currently bursting)
-               if (Math.random() > 0.1) { // 90% chance
-                 stumbleTicks = 2;
-               }
+               // Leader gets nervous and stumbles (100% guaranteed, but only if not currently bursting)
+               stumbleTicks = 2;
             } else if (duck.progress > maxProgress - 200 && burstTicks === 0 && stumbleTicks === 0) {
               // Trailing ducks get a massive adrenaline rush
-              if (Math.random() > 0.80) {
+              if (Math.random() > 0.50) { // 50% chance (very high) to prevent clumping
                 burstTicks = 4; // Long sprint to the finish
               }
             }
@@ -207,10 +205,10 @@ const AdminPanel = () => {
 
           // 2. Apply active states
           if (stumbleTicks > 0) {
-             multiplier = 0.3; // Slow but smooth (0.3x)
+             multiplier = 0.5; // Slow but NOT a freeze (0.5x)
              stumbleTicks--;
           } else if (burstTicks > 0) {
-             multiplier = 2.2; // Fast but smooth (2.2x)
+             multiplier = 3.5; // Extremely fast (3.5x) to blast out of the pack
              burstTicks--;
           }
 
