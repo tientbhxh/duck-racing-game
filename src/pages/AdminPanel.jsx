@@ -130,20 +130,22 @@ const AdminPanel = () => {
         // Normal racing logic if no one has finished yet
         const baseStep = 1000 / (duration * 2.5);
         const newDucks = currentDucks.map(duck => {
-          let isBurst = Math.random() > 0.90; 
-          let multiplier = isBurst ? (Math.random() * 1.0 + 1.5) : (Math.random() * 0.6 + 0.7);
+          // Increase variance for natural separation (0.3x to 1.3x)
+          let isBurst = Math.random() > 0.95; // 5% chance of burst
+          let multiplier = isBurst ? (Math.random() * 2.5 + 3.0) : (Math.random() * 1.0 + 0.3);
 
           // Drama mechanic: Intense scramble near the finish line (Rubber-banding)
-          if (maxProgress > 850) {
+          // Only apply between 800 and 970 so they don't freeze right on the finish line
+          if (maxProgress > 800 && maxProgress < 970) {
             if (duck.id === leaderId) {
-              // The leader gets nervous and slows down significantly!
+              // The leader gets nervous and slows down
               isBurst = false;
-              multiplier = Math.random() * 0.4 + 0.3; // 0.3x - 0.7x
-            } else if (duck.progress > 700) {
+              multiplier = Math.random() * 0.4 + 0.5; // 0.5x - 0.9x
+            } else if (duck.progress > maxProgress - 200) {
               // The trailing ducks get a huge adrenaline rush!
-              isBurst = Math.random() > 0.60; // 40% chance to burst
+              isBurst = Math.random() > 0.50; // 50% chance to burst
               if (isBurst) {
-                multiplier = Math.random() * 2.0 + 2.5; // Massive 2.5x - 4.5x burst!
+                multiplier = Math.random() * 2.0 + 3.5; // Massive 3.5x - 5.5x burst!
               }
             }
           }
