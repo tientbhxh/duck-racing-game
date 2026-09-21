@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { db, dbRef, set, onValue, update } from '../firebase';
+import { db, dbRef, get, set, update, onValue, remove } from '../firebase';
 import { getInitialRaceState } from '../utils/duckGenerator';
+import useWorkerInterval from '../hooks/useWorkerInterval';
 
 const AdminPanel = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -9,8 +10,8 @@ const AdminPanel = () => {
   const [duration, setDuration] = useState(30);
   const [raceStatus, setRaceStatus] = useState('idle');
   const [ducks, setDucks] = useState([]);
+  const [isRacing, setIsRacing] = useState(false);
   const [prizeContent, setPrizeContent] = useState('');
-  const raceLoopRef = useRef(null);
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -126,40 +127,40 @@ const AdminPanel = () => {
     }
 
     update(dbRef('raceState'), { status: 'running' });
-    
-    if (raceLoopRef.current) clearInterval(raceLoopRef.current);
-    
-    raceLoopRef.current = setInterval(() => {
-      setDucks((currentDucks) => {
-        let winnerFound = false;
-        
-        // Check if any duck has reached or crossed the finish line
-        const finishedDucks = currentDucks.filter(d => d.progress >= 1000);
-        if (finishedDucks.length > 0) {
-           // Sort by highest progress to ensure the furthest duck is crowned if multiple finish in the same tick
-           finishedDucks.sort((a, b) => b.progress - a.progress);
-           const winner = finishedDucks[0];
-           
-           winnerFound = true;
-           // If a winner is found, ONLY move the winner forward quickly. Stop everyone else.
-           const newDucks = currentDucks.map(duck => {
-             if (duck.id === winner.id) {
-                // Swim forward to 1150 (takes 6 seconds at +10/tick) for a long solo lap of honor!
-                return { ...duck, progress: Math.min(1150, duck.progress + 10) };
-             }
-             return duck;
-           });
-           
-           update(dbRef('raceState'), { ducks: newDucks });
+    setIsRacing(true);
+  };
 
-           // Once the winner finishes their solo lap (reaches 1150), end the race
-           if (winner.progress >= 1150) {
-             clearInterval(raceLoopRef.current);
-             update(dbRef('raceState'), { status: 'finished', winner: winner });
+  useWorkerInterval(() => {
+    setDucks((currentDucks) => {
+      let winnerFound = false;
+      
+      // Check if any duck has reached or crossed the finish line
+      const finishedDucks = currentDucks.filter(d => d.progress >= 1000);
+      if (finishedDucks.length > 0) {
+         // Sort by highest progress to ensure the furthest duck is crowned if multiple finish in the same tick
+         finishedDucks.sort((a, b) => b.progress - a.progress);
+         const winner = finishedDucks[0];
+         
+         winnerFound = true;
+         // If a winner is found, ONLY move the winner forward quickly. Stop everyone else.
+         const newDucks = currentDucks.map(duck => {
+           if (duck.id === winner.id) {
+              // Swim forward to 1150 (takes 6 seconds at +10/tick) for a long solo lap of honor!
+              return { ...duck, progress: Math.min(1150, duck.progress + 10) };
            }
-           
-           return newDucks;
-        }
+           return duck;
+         });
+         
+         update(dbRef('raceState'), { ducks: newDucks });
+
+         // Once the winner finishes their solo lap (reaches 1150), end the race
+         if (winner.progress >= 1150) {
+           setIsRacing(false);
+           update(dbRef('raceState'), { status: 'finished', winner: winner });
+         }
+         
+         return newDucks;
+      }
 
         // Find max progress to identify the leader
         const maxProgress = Math.max(...currentDucks.map(d => d.progress));
@@ -206,12 +207,11 @@ const AdminPanel = () => {
 
         update(dbRef('raceState'), { ducks: newDucks });
         return newDucks;
-      });
-    }, 400); // 2.5 ticks per second for smoothing
-  };
+    });
+  }, isRacing ? 400 : null); // 2.5 ticks per second for smoothing
 
   const handleReset = () => {
-    if (raceLoopRef.current) clearInterval(raceLoopRef.current);
+    setIsRacing(false);
     const resetDucks = ducks.map(d => ({ ...d, progress: 0 }));
     update(dbRef('raceState'), {
       status: 'idle',
