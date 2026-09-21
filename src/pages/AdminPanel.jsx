@@ -67,11 +67,14 @@ const AdminPanel = () => {
     let remainingPlayers = [];
     let remainingDucks = [...initialDucks];
     
-    // Parse forced mappings (e.g. "Nguyễn Văn A: Vịt Sịp Hồng")
+    // Parse forced mappings (e.g. "Nguyễn Văn A: Vịt Sịp Hồng" or "Nguyễn Văn A - Vịt Báo Thủ")
     rawLines.forEach(line => {
-      if (line.includes(':')) {
-        const [playerName, preferredDuckName] = line.split(':').map(s => s.trim());
+      const match = line.match(/^(.+?)\s*[:\-：]\s*(.+)$/);
+      if (match) {
+        const playerName = match[1].trim();
+        const preferredDuckName = match[2].trim();
         const duckIndex = remainingDucks.findIndex(d => d.name.toLowerCase() === preferredDuckName.toLowerCase());
+        
         if (duckIndex !== -1) {
           // Found an exact match for the duck name in our predefined list
           const duck = remainingDucks.splice(duckIndex, 1)[0];
