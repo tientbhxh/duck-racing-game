@@ -35,7 +35,7 @@
 }
 
 .duck-smooth {
-  transition: transform 0.1s linear, top 0.1s linear;
+  transition: transform 0.4s linear, top 0.4s linear;
 }
 
 /* Custom Duck Animation styles */

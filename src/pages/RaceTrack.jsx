@@ -6,6 +6,7 @@ import { dbRef, onValue } from '../firebase';
 const RaceTrack = () => {
   const [ducks, setDucks] = useState([]);
   const [raceStatus, setRaceStatus] = useState('idle');
+  const [revealedCount, setRevealedCount] = useState(0);
 
   useEffect(() => {
     const raceRef = dbRef('raceState');
@@ -19,18 +20,28 @@ const RaceTrack = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (raceStatus === 'matching') {
+      setRevealedCount(0);
+      const interval = setInterval(() => {
+        setRevealedCount(prev => prev + 1);
+      }, 500); // Reveal one duck every 500ms
+      return () => clearInterval(interval);
+    }
+  }, [raceStatus]);
+
   const maxProgress = ducks.length > 0 ? Math.max(...ducks.map(d => d.progress)) : 0;
   let cameraX = Math.max(0, maxProgress - 60); 
   cameraX = Math.min(cameraX, 900);
-  const bgScrollX = -cameraX * 2;
+  const bgScrollX = -cameraX; // Reduced parallax speed
 
   return (
     // YouTube-like responsive layout: 
     // Portrait mobile: flex-col, Track takes top 45vh, Chat takes bottom remaining space
-    // Landscape mobile/Desktop: flex-row, Track takes 75% width, Chat takes 25%
+    // Desktop: flex-row, Track exactly 75%, Chat exactly 25%
     <div className="flex flex-col md:flex-row h-[calc(100vh-80px)] md:h-[85vh] gap-4">
       {/* Race Track Container */}
-      <div className="flex-none md:flex-1 h-[45vh] md:h-full w-full md:w-3/4 bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col relative">
+      <div className="flex-none md:flex-none h-[45vh] md:h-full w-full md:w-3/4 bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden flex flex-col relative">
         <div className="p-2 md:p-4 bg-blue-600 text-white font-bold text-sm md:text-lg flex justify-between z-20 shadow-md">
           <span>Trường Đua Vịt {raceStatus === 'matching' ? '(Bốc thăm...)' : ''}</span>
           <span>Sĩ số: {ducks.filter(d => d.playerName).length}/30</span>
@@ -38,18 +49,23 @@ const RaceTrack = () => {
         
         {/* Matchmaking Overlay */}
         {raceStatus === 'matching' && (
-          <div className="absolute inset-0 top-[60px] bg-black/90 z-50 flex flex-col items-center justify-center p-8 overflow-y-auto">
-            <h2 className="text-3xl font-bold text-yellow-400 mb-8 animate-bounce">ĐANG GHÉP NGƯỜI CHƠI VÀO VỊT...</h2>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 w-full">
-              {ducks.filter(d => d.playerName).map((duck, idx) => (
-                <div key={duck.id} className="bg-white/10 rounded-lg p-2 flex flex-col items-center border border-white/20 animate-pulse" style={{ animationDelay: `${(idx * 0.1) % 2}s` }}>
-                  <div className="scale-75 origin-top">
-                    <DuckSVG color={duck.color} hat={duck.hat} accessory={duck.accessory} number={duck.id} />
+          <div className="absolute inset-0 top-[60px] bg-black/90 z-50 flex flex-col items-center justify-start pt-8 overflow-y-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-yellow-400 mb-6 animate-pulse">ĐANG BỐC THĂM TỪNG NGƯỜI CHƠI...</h2>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 w-full px-4">
+              {ducks.filter(d => d.playerName).map((duck, idx) => {
+                if (idx > revealedCount) return null;
+                const isJustRevealed = idx === revealedCount;
+                
+                return (
+                  <div key={duck.id} className={`bg-white/10 rounded-lg p-2 flex flex-col items-center border border-white/20 transition-all ${isJustRevealed ? 'scale-110 shadow-[0_0_15px_yellow]' : 'scale-100'}`}>
+                    <div className="scale-75 origin-top">
+                      <DuckSVG color={duck.color} hat={duck.hat} accessory={duck.accessory} number={duck.id} />
+                    </div>
+                    <div className="text-white font-bold mt-1 text-center text-xs break-words w-full px-1">{duck.playerName}</div>
+                    <div className="text-yellow-400 text-[10px] text-center leading-tight mt-1">{duck.name}</div>
                   </div>
-                  <div className="text-white font-bold mt-1 text-center text-xs break-words w-full px-1">{duck.playerName}</div>
-                  <div className="text-yellow-400 text-[10px] text-center leading-tight mt-1">{duck.name}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -81,9 +97,7 @@ const RaceTrack = () => {
             
             <div className="absolute inset-0">
             {ducks.map((duck) => {
-              // Convert 0-1000 progress to viewport width (vw) relative to camera
               const duckScreenX = duck.progress - cameraX;
-              
               return (
                 <div 
                   key={duck.id}
@@ -113,7 +127,7 @@ const RaceTrack = () => {
       </div>
       
       {/* Chat Box Container */}
-      <div className="flex-1 md:w-1/4 min-h-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg flex flex-col">
+      <div className="flex-1 md:flex-none w-full md:w-1/4 min-h-0 bg-white dark:bg-slate-800 rounded-xl shadow-lg flex flex-col">
         <ChatBox />
       </div>
     </div>

@@ -95,8 +95,8 @@ const AdminPanel = () => {
           allFinished = false;
           
           // Random burst logic (duration average for 1000 distance)
-          // Progress per tick (100ms) = 1000 / (duration * 10 ticks/sec)
-          const baseStep = 1000 / (duration * 10);
+          // Progress per tick (400ms) = 1000 / (duration * 2.5 ticks/sec)
+          const baseStep = 1000 / (duration * 2.5);
           const isBurst = Math.random() > 0.85; 
           const step = baseStep * (isBurst ? (Math.random() * 3 + 1) : Math.random() + 0.5);
 
@@ -115,7 +115,7 @@ const AdminPanel = () => {
         }
         return newDucks;
       });
-    }, 100); // 10 ticks per second for smoother update
+    }, 400); // 2.5 ticks per second for smoothing
   };
 
   const handleReset = () => {
