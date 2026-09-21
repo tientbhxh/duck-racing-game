@@ -175,18 +175,18 @@ const AdminPanel = () => {
           let stumbleTicks = duck.stumbleTicks || 0;
 
           // 1. Roll for new states if not currently in a special state
-          if (burstTicks === 0 && Math.random() > 0.95) {
-             burstTicks = Math.floor(Math.random() * 3) + 2; // 2-4 ticks of normal burst
+          if (burstTicks === 0 && Math.random() > 0.90) { // 10% chance for random bursts
+             burstTicks = Math.floor(Math.random() * 2) + 2; // 2-3 ticks of normal burst
           }
 
           // Drama mechanic 1: Continuous chaotic lead changes throughout the race
-          if (maxProgress > 100 && maxProgress < 970 && burstTicks === 0 && stumbleTicks === 0) {
-            if (duck.id === leaderId && Math.random() > 0.85) { 
-              // Leader stumbles for 2-4 ticks (0.8 - 1.6 seconds)
-              stumbleTicks = Math.floor(Math.random() * 3) + 2;
-            } else if (duck.progress < maxProgress - 80 && Math.random() > 0.85) { 
-              // Stragglers get a long adrenaline rush (3-5 ticks)
-              burstTicks = Math.floor(Math.random() * 3) + 3;
+          if (maxProgress > 100 && maxProgress < 850 && burstTicks === 0 && stumbleTicks === 0) {
+            if (duck.id === leaderId && Math.random() > 0.90) { 
+              // Leader stumbles rarely (10% chance) for 1-2 ticks (prevents mass slow-down)
+              stumbleTicks = Math.floor(Math.random() * 2) + 1;
+            } else if (duck.id !== leaderId && duck.progress < maxProgress - 30 && Math.random() > 0.80) { 
+              // Trailing ducks (even slightly behind) get adrenaline rushes easily
+              burstTicks = Math.floor(Math.random() * 3) + 2;
             }
           }
 
