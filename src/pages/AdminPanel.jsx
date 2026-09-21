@@ -89,17 +89,17 @@ const AdminPanel = () => {
       setDucks((currentDucks) => {
         let allFinished = true;
         const newDucks = currentDucks.map(duck => {
-          if (duck.progress >= 200) return duck; // Target distance is 200 (Snail pace)
+          if (duck.progress >= 70) return duck; // Target distance is 70 (Extremely slow snail pace)
           allFinished = false;
           
-          // Progress per tick (400ms) = 200 / (duration * 2.5 ticks/sec)
-          const baseStep = 200 / (duration * 2.5);
+          // Progress per tick (400ms) = 70 / (duration * 2.5 ticks/sec)
+          const baseStep = 70 / (duration * 2.5);
           const isBurst = Math.random() > 0.85; 
           const step = baseStep * (isBurst ? (Math.random() * 3 + 1) : Math.random() + 0.5);
 
           return {
             ...duck,
-            progress: Math.min(200, duck.progress + step)
+            progress: Math.min(70, duck.progress + step)
           };
         });
 

@@ -40,21 +40,16 @@
 
 @keyframes paddle {
   0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-4px) rotate(-3deg); }
-  75% { transform: translateY(2px) rotate(3deg); }
+  25% { transform: translateY(-1.5px) rotate(-1.5deg); }
+  75% { transform: translateY(1px) rotate(1.5deg); }
 }
 
 .animate-paddle {
-  animation: paddle 0.6s infinite ease-in-out;
+  animation: paddle 1s infinite ease-in-out;
 }
 
 /* Custom Duck Animation styles */
 .duck-sprite {
   font-size: 2rem;
   line-height: 1;
-}
-
-.river-pattern {
-  background-color: #4facfe;
-  background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
 }

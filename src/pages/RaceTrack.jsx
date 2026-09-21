@@ -32,7 +32,7 @@ const RaceTrack = () => {
 
   const maxProgress = ducks.length > 0 ? Math.max(...ducks.map(d => d.progress)) : 0;
   let cameraX = Math.max(0, maxProgress - 60); 
-  cameraX = Math.min(cameraX, 100); // Cap camera so finish line (200) stops at 100% right edge
+  cameraX = Math.min(cameraX, 70); // Cap camera so finish line (70) stops at 70% right edge
   const bgScrollX = -cameraX; // Reduced parallax speed
 
   return (
@@ -87,8 +87,8 @@ const RaceTrack = () => {
               {/* Start Line */}
               <div className="absolute top-0 bottom-0 w-2 bg-white/40 border-l-4 border-dashed border-white transition-transform" style={{ transform: `translateX(${10 - cameraX}vw)`, left: 0 }}></div>
               
-              {/* Finish Line (at 200 progress) */}
-              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black transition-transform" style={{ transform: `translateX(${200 - cameraX}vw)`, left: 0 }}>
+              {/* Finish Line (at 70 progress) */}
+              <div className="absolute top-0 bottom-0 w-8 flex flex-col z-0 border-l-2 border-black transition-transform" style={{ transform: `translateX(${70 - cameraX}vw)`, left: 0 }}>
                 {Array.from({ length: 20 }).map((_, i) => (
                   <div key={i} className="flex-1 w-full flex">
                     <div className={`flex-1 ${i % 2 === 0 ? 'bg-white' : 'bg-black'}`}></div>
