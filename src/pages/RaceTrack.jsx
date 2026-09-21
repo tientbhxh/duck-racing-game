@@ -42,9 +42,8 @@ const RaceTrack = () => {
   const maxVw = progressToVw(maxProgress);
 
   // Camera keeps the leader at exactly 30vw (center-left) to track perfectly. 
+  // No cap! The camera will endlessly track the leader, even past the finish line!
   let cameraX = Math.max(0, maxVw - 30); 
-  // Cap camera so finish line (TRACK_LENGTH_VW) appears at 50vw (center-right), leaving space for solo lap
-  cameraX = Math.min(cameraX, TRACK_LENGTH_VW - 50); 
   const bgScrollX = -cameraX; // Background scrolls 1:1 with camera
 
   return (
@@ -88,12 +87,12 @@ const RaceTrack = () => {
             {/* Scenery: Sky & Grass (Parallax) */}
             <div className="h-1/5 sky-pattern scene-transition" style={{ backgroundPositionX: `${bgScrollX * 0.5}vw` }}></div>
             <div className="h-12 grass-pattern scene-transition relative" style={{ backgroundPositionX: `${bgScrollX}vw` }}>
-              {/* Dynamically generated moving bushes spanning the entire 400vw track */}
-              {Array.from({ length: 20 }).map((_, i) => (
+              {/* Dynamically generated moving bushes spanning way past the finish line (600vw) */}
+              {Array.from({ length: 30 }).map((_, i) => (
                 <div key={`bush-${i}`} className={`absolute bottom-0 rounded-t-full opacity-80 scene-transition ${i % 2 === 0 ? 'bg-green-700 w-16 h-8' : 'bg-green-800 w-12 h-6'}`} style={{ transform: `translateX(${i * 20 + 10 - cameraX}vw)` }}></div>
               ))}
               {/* Distance markers to make camera panning extremely obvious */}
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 10 }).map((_, i) => (
                 <div key={`marker-${i}`} className="absolute top-1 text-white/70 font-bold text-[10px] px-1 bg-black/30 rounded scene-transition" style={{ transform: `translateX(${i * 50 + 50 - cameraX}vw)` }}>{i * 50 + 50}m</div>
               ))}
             </div>

@@ -99,16 +99,16 @@ const AdminPanel = () => {
            // If a winner is found, ONLY move the winner forward quickly. Stop everyone else.
            const newDucks = currentDucks.map(duck => {
              if (duck.id === winner.id) {
-                // Swim forward just enough to cross the finish line gracefully (to 1050)
-                return { ...duck, progress: Math.min(1050, duck.progress + 10) };
+                // Swim forward to 1150 (takes 6 seconds at +10/tick) for a long solo lap of honor!
+                return { ...duck, progress: Math.min(1150, duck.progress + 10) };
              }
              return duck;
            });
            
            update(dbRef('raceState'), { ducks: newDucks });
 
-           // Once the winner finishes their solo lap (reaches 1050), end the race
-           if (winner.progress >= 1050) {
+           // Once the winner finishes their solo lap (reaches 1150), end the race
+           if (winner.progress >= 1150) {
              clearInterval(raceLoopRef.current);
              update(dbRef('raceState'), { status: 'finished', winner: winner });
            }
