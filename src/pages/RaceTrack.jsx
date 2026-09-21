@@ -65,22 +65,22 @@ const RaceTrack = () => {
         
         {/* Matchmaking Overlay */}
         {raceStatus === 'matching' && (
-          <div className="absolute inset-0 top-[60px] bg-slate-900/90 backdrop-blur-sm z-50 flex flex-col items-center justify-start pt-8 overflow-y-auto custom-scrollbar pb-8">
-            <h2 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-500 mb-8 animate-pulse tracking-wide drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
+          <div className="absolute inset-0 top-[50px] md:top-[60px] bg-slate-900/90 backdrop-blur-sm z-50 flex flex-col items-center justify-start pt-4 overflow-y-auto custom-scrollbar pb-4">
+            <h2 className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-500 mb-4 animate-pulse tracking-wide drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]">
               ĐANG BỐC THĂM TỪNG NGƯỜI CHƠI...
             </h2>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 w-full px-6">
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-10 gap-2 w-full px-4">
               {ducks.filter(d => d.playerName).map((duck, idx) => {
                 if (idx > revealedCount) return null;
                 const isJustRevealed = idx === revealedCount;
                 
                 return (
-                  <div key={duck.id} className={`glass-panel rounded-xl p-3 flex flex-col items-center transition-all duration-500 ${isJustRevealed ? 'scale-110 shadow-[0_0_30px_rgba(250,204,21,0.6)] border-yellow-400/50' : 'scale-100'}`}>
-                    <div className="scale-75 origin-top drop-shadow-lg">
+                  <div key={duck.id} className={`glass-panel rounded-lg p-2 flex flex-col items-center transition-all duration-500 ${isJustRevealed ? 'scale-110 shadow-[0_0_30px_rgba(250,204,21,0.6)] border-yellow-400/50' : 'scale-100'}`}>
+                    <div className="scale-50 sm:scale-75 origin-top drop-shadow-lg -mb-2 sm:mb-0">
                       <DuckSVG color={duck.color} hat={duck.hat} accessory={duck.accessory} number={duck.id} />
                     </div>
-                    <div className="text-white font-bold mt-2 text-center text-xs break-words w-full px-1">{duck.playerName}</div>
-                    <div className="text-yellow-400 text-[10px] font-medium text-center leading-tight mt-1 bg-black/30 px-2 py-0.5 rounded-full">{duck.name}</div>
+                    <div className="text-white font-bold mt-1 text-center text-[10px] sm:text-xs break-words w-full px-1 line-clamp-2 leading-tight">{duck.playerName}</div>
+                    <div className="text-yellow-400 text-[8px] sm:text-[9px] font-medium text-center leading-tight mt-1 bg-black/30 px-2 py-0.5 rounded-full whitespace-nowrap overflow-hidden text-ellipsis w-full">{duck.name}</div>
                   </div>
                 );
               })}
